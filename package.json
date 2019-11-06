@@ -1,0 +1,30 @@
+{
+  "name": "codejam-virtual-keyboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./app.js",
+  "scripts": {
+    "build": "node_modules/.bin/webpack --progress",
+    "start": "node_modules/.bin/webpack-dev-server",
+    "prod": "node_modules/.bin/webpack --mode production"
+  },
+  "author": "Andrey Obraztsov",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "dependencies": {}
+}
