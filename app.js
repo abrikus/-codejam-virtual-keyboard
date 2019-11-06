@@ -37,13 +37,29 @@ const keyDownListener = (event) => {
     someKey = document.querySelector(`div[data-action=${event.code}]`);
     setValue = event.key;
   }
-  
+
   if (event.target.hasAttribute('data-action')) {
     someKey = event.target;
     setValue = someKey.innerText;
   }
 
-  if (someKey) {
+  if (someKey.getAttribute('data-action') === 'ShiftLeft'
+    || someKey.getAttribute('data-action') === 'ShiftRight'
+    || someKey.getAttribute('data-action') === 'ControlLeft'
+    || someKey.getAttribute('data-action') === 'ControlRight'
+    || someKey.getAttribute('data-action') === 'AltLeft') {
+    textArea.value += '';
+    someKey.classList.toggle('active');
+  } else if (someKey.getAttribute('data-action') === 'Tab') {
+    textArea.value += ' '.repeat(4);
+    someKey.classList.toggle('active');
+  } else if (someKey.getAttribute('data-action') === 'Enter') {
+    textArea.value += '\n';
+    someKey.classList.toggle('active');
+  } else if (someKey.getAttribute('data-action') === 'Space') {
+    textArea.value += ' ';
+    someKey.classList.toggle('active');
+  } else {
     textArea.value += setValue;
     someKey.classList.toggle('active');
   }
@@ -54,8 +70,7 @@ const keyUpListener = (event) => {
   let someKey;
   if (event.code === undefined) {
     someKey = event.target;
-  }
-  else {
+  } else {
     someKey = document.querySelector(`div[data-action=${event.code}]`);
   }
   someKey.classList.toggle('active');
