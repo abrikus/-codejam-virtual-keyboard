@@ -6,7 +6,8 @@ const states = {
   ControlLeft: false,
   AltLeft: false,
   ShiftLeft: false,
-  lang: 'ru',
+  position: null,
+  lang: 'en',
 };
 
 const createEl = (tag, cls, addTo, tagvalue) => {
@@ -73,6 +74,13 @@ const changeLang = (kbdKeysInst) => {
   }
 };
 
+// const langSwitcher = () => {
+//   const { lang } = states;
+//   if (lang === 'en') {
+
+//   }
+// }
+
 const shiftUpper = (kbdKeysInst) => {
   const { lang, ShiftLeft } = states;
   if (lang === 'ru' && ShiftLeft === true) {
@@ -120,7 +128,9 @@ const body = document.querySelector('body');
 const root = createEl('div', 'root', body, null);
 const wrapper = createEl('div', 'wrapper', root, null);
 const textArea = createEl('textarea', null, wrapper, null);
+const hint = createEl('div', 'hint', wrapper, null);
 const kbdContainer = createEl('div', 'keyboard', wrapper, null);
+hint.innerHTML = 'changeLanguge: CtrlLeft + AltLeft; &nbsp;&nbsp;&nbsp; UpperCase: ShiftLeft (press and release button)';
 
 
 kbdkeys.forEach((row) => {
@@ -213,6 +223,29 @@ const keyDownListener = (event) => {
       someKey.classList.toggle('active');
     } else if (someKey.getAttribute('data-action') === 'Space') {
       textArea.value += ' ';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'Backspace') {
+      textArea.value = textArea.value.slice(0, -1);
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowLeft') {
+      textArea.value += '←';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowDown') {
+      textArea.value += '↓';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowRight') {
+      textArea.value += '→';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowUp') {
+      textArea.value += '↑';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'CapsLock'
+      || someKey.getAttribute('data-action') === 'Delete'
+      || someKey.getAttribute('data-action') === 'AltRight'
+      || someKey.getAttribute('data-action') === 'ControlRight'
+      || someKey.getAttribute('data-action') === 'ShiftRight'
+      || someKey.getAttribute('data-action') === 'MetaLeft') {
+      textArea.value += '';
       someKey.classList.toggle('active');
     } else if (someKey.classList.contains('key')) {
       textArea.value += setValue;
