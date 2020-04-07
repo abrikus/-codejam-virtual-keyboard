@@ -1,0 +1,104 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #aaa;
+    font-family: 'Barlow', sans-serif;
+    font: 300 15px/24px;
+    color: #bbb;
+    user-select: none;
+    text-shadow: 0 0 1px #aaa;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hint {
+    color: rgb(139, 0, 0);
+}
+
+textarea {
+    font-size: 22px;
+    width: 70%;
+    height: 150px;
+}
+
+.keyboard {
+    margin: 30px auto;
+    width: 90%;
+    height: 400px;
+    background: #00000096;
+    padding: 30px 80px;
+    border-radius: 5px;
+    /* border-bottom: 6px solid #999; */
+}
+
+.key-row {
+    display: -webkit-flex;
+    margin: 0 auto 7px;
+    line-height: 50px;
+}
+
+.key, .arrowkey-container {
+    margin: 0 6px 0 0;
+    text-align: center;
+}
+
+.key {
+    background: rgb(112, 112, 112);
+    color: #eee;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(34, 34, 34, 0.433), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+    transition: 0.1s;
+    align-items: center;
+    align-content: center;
+    height: 57px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+sup, sub {
+    outline: 1px solid magenta;
+    display: block;
+    align-self: center;
+}
+
+.active {
+    transform: translateY(3px);
+    background: #333;
+    box-shadow: 0 1px 0 #000;
+}
+
+.key {
+    flex: 1;
+}
+
+.keyboard .tab,
+.keyboard .capslock,
+.keyboard .ctrl-right {
+    flex: 1.5;
+}
+
+.keyboard .backspace,
+.keyboard .enter {
+    flex: 2;
+}
+
+.keyboard .shift-left,
+.keyboard .ctrl-left {
+    flex: 2.5;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.keyboard .space {
+    flex: 5;
+}
+
+.key-row .key:last-child {
+    margin: 0;
+}

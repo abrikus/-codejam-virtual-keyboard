@@ -1,0 +1,295 @@
+import './style.css';
+import kbdkeys from './keys';
+
+const states = {
+  firedKey: null,
+  ControlLeft: false,
+  AltLeft: false,
+  ShiftLeft: false,
+  position: null,
+  lang: 'en',
+};
+
+const createEl = (tag, cls, addTo, tagvalue) => {
+  const el = document.createElement(tag);
+  if (cls != null) {
+    el.setAttribute('class', cls);
+  }
+  if (tagvalue != null) {
+    el.innerText = tagvalue;
+  }
+
+  addTo.append(el);
+  return el;
+};
+
+const changeLang = (kbdKeysInst) => {
+  const { lang, ShiftLeft } = states;
+  if (lang === 'en' && ShiftLeft === false) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyRu = key[2];
+        keyCurrent.innerText = keyRu;
+      });
+    });
+    states.lang = 'ru';
+  }
+
+  if (lang === 'en' && ShiftLeft === true) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyRu = key[3];
+        keyCurrent.innerText = keyRu;
+      });
+    });
+    states.lang = 'ru';
+  }
+
+  if (lang === 'ru' && ShiftLeft === false) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyEn = key[4];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'en';
+  }
+
+  if (lang === 'ru' && ShiftLeft === true) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyEn = key[5];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'en';
+  }
+};
+
+const langSwitcher = () => {
+  const { lang } = states;
+  if (lang === 'en') {
+    kbdkeys.forEach((row) => {
+      row.forEach((item) => {
+        const keyCurrent = document.querySelector(`div[data-action=${item[1]}]`);
+        const keyEn = item[2];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'ru';
+  }
+
+  if (lang === 'ru') {
+    kbdkeys.forEach((row) => {
+      row.forEach((item) => {
+        const keyCurrent = document.querySelector(`div[data-action=${item[1]}]`);
+        const keyEn = item[4];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'en';
+  }
+};
+
+const shiftUpper = (kbdKeysInst) => {
+  const { lang, ShiftLeft } = states;
+  if (lang === 'ru' && ShiftLeft === true) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyRu = key[3];
+        keyCurrent.innerText = keyRu;
+      });
+    });
+  }
+
+  if (lang === 'ru' && ShiftLeft === false) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyRu = key[2];
+        keyCurrent.innerText = keyRu;
+      });
+    });
+  }
+
+  if (lang === 'en' && ShiftLeft === true) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyEn = key[5];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+  }
+
+  if (lang === 'en' && ShiftLeft === false) {
+    kbdKeysInst.forEach((keyGroup) => {
+      keyGroup.forEach((key) => {
+        const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
+        const keyEn = key[4];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+  }
+};
+
+const body = document.querySelector('body');
+const root = createEl('div', 'root', body);
+const wrapper = createEl('div', 'wrapper', root);
+const textArea = createEl('textarea', null, wrapper);
+const hint = createEl('div', 'hint', wrapper);
+const kbdContainer = createEl('div', 'keyboard', wrapper);
+hint.innerHTML = 'changeLanguge: CtrlLeft + AltLeft; &nbsp;&nbsp;&nbsp; UpperCase: ShiftLeft (press and release button)';
+
+
+kbdkeys.forEach((row) => {
+  const sectionRow = createEl('section', 'key-row', kbdContainer, null);
+  row.forEach((keyItem) => {
+    const keyDiv = createEl('div', keyItem[0], sectionRow, keyItem[2]);
+    keyDiv.setAttribute('data-action', keyItem[1]);
+  });
+});
+
+if (localStorage.getItem('lang')) {
+  states.lang = localStorage.getItem('lang');
+  langSwitcher();
+}
+
+const keyDownListener = (event) => {
+  event.preventDefault();
+  let someKey;
+  let setValue;
+  if (event.code) {
+    someKey = document.querySelector(`div[data-action=${event.code}]`);
+    setValue = event.key;
+  }
+
+  if (event.target.hasAttribute('data-action')) {
+    someKey = event.target;
+    setValue = someKey.innerText;
+  }
+
+  if (someKey) {
+    if (states.firedKey !== null) {
+      states.firedKey.classList.remove('active');
+      states.firedKey = someKey;
+    } else {
+      states.firedKey = someKey;
+    }
+    if (someKey.getAttribute('data-action') === 'ShiftLeft'
+    || someKey.getAttribute('data-action') === 'ControlLeft'
+    || someKey.getAttribute('data-action') === 'AltLeft') {
+      const elAdv = someKey;
+      const { ShiftLeft, ControlLeft, AltLeft } = states;
+      if (elAdv.getAttribute('data-action') === 'ShiftLeft') {
+        if (ShiftLeft === true) {
+          states.ShiftLeft = false;
+          elAdv.classList.toggle('active');
+        }
+        if (ShiftLeft === false) {
+          states.ShiftLeft = true;
+          elAdv.classList.toggle('active');
+        }
+        shiftUpper(kbdkeys);
+      }
+
+      if (elAdv.getAttribute('data-action') === 'ControlLeft') {
+        if (ControlLeft === true) {
+          states.ControlLeft = false;
+          elAdv.classList.toggle('active');
+        }
+
+        if (ControlLeft === false) {
+          states.ControlLeft = true;
+          elAdv.classList.toggle('active');
+          if (AltLeft === true) {
+            changeLang(kbdkeys);
+            states.ControlLeft = false;
+            states.AltLeft = false;
+          }
+        }
+      }
+
+      if (elAdv.getAttribute('data-action') === 'AltLeft') {
+        if (AltLeft === true) {
+          states.AltLeft = false;
+          elAdv.classList.toggle('active');
+        }
+
+        if (AltLeft === false) {
+          states.AltLeft = true;
+          elAdv.classList.toggle('active');
+          if (ControlLeft === true) {
+            changeLang(kbdkeys);
+            states.ControlLeft = false;
+            states.AltLeft = false;
+          }
+        }
+      }
+    } else if (someKey.getAttribute('data-action') === 'Tab') {
+      textArea.value += ' '.repeat(4);
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'Enter') {
+      textArea.value += '\n';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'Space') {
+      textArea.value += ' ';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'Backspace') {
+      textArea.value = textArea.value.slice(0, -1);
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowLeft') {
+      textArea.value += '←';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowDown') {
+      textArea.value += '↓';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowRight') {
+      textArea.value += '→';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'ArrowUp') {
+      textArea.value += '↑';
+      someKey.classList.toggle('active');
+    } else if (someKey.getAttribute('data-action') === 'CapsLock'
+      || someKey.getAttribute('data-action') === 'Delete'
+      || someKey.getAttribute('data-action') === 'AltRight'
+      || someKey.getAttribute('data-action') === 'ControlRight'
+      || someKey.getAttribute('data-action') === 'ShiftRight'
+      || someKey.getAttribute('data-action') === 'MetaLeft') {
+      textArea.value += '';
+      someKey.classList.toggle('active');
+    } else if (someKey.classList.contains('key')) {
+      textArea.value += setValue;
+      someKey.classList.toggle('active');
+    }
+  }
+};
+
+const keyUpListener = () => {
+  let { firedKey } = states;
+  if (firedKey !== null) {
+    firedKey.classList.remove('active');
+    firedKey = null;
+  }
+};
+
+const reloadListener = () => {
+  if (states.lang === 'ru') {
+    localStorage.setItem('lang', 'en');
+  }
+
+  if (states.lang === 'en') {
+    localStorage.setItem('lang', 'ru');
+  }
+};
+
+window.addEventListener('keydown', keyDownListener);
+window.addEventListener('keyup', keyUpListener);
+kbdContainer.addEventListener('mousedown', keyDownListener);
+kbdContainer.addEventListener('mouseup', keyUpListener);
+window.addEventListener('unload', reloadListener);
