@@ -139,11 +139,11 @@ const shiftUpper = (kbdKeysInst) => {
 };
 
 const body = document.querySelector('body');
-const root = createEl('div', 'root', body, null);
-const wrapper = createEl('div', 'wrapper', root, null);
-const textArea = createEl('textarea', null, wrapper, null);
-const hint = createEl('div', 'hint', wrapper, null);
-const kbdContainer = createEl('div', 'keyboard', wrapper, null);
+const root = createEl('div', 'root', body);
+const wrapper = createEl('div', 'wrapper', root);
+const textArea = createEl('textarea', null, wrapper);
+const hint = createEl('div', 'hint', wrapper);
+const kbdContainer = createEl('div', 'keyboard', wrapper);
 hint.innerHTML = 'changeLanguge: CtrlLeft + AltLeft; &nbsp;&nbsp;&nbsp; UpperCase: ShiftLeft (press and release button)';
 
 
@@ -273,7 +273,7 @@ const keyDownListener = (event) => {
 const keyUpListener = () => {
   let { firedKey } = states;
   if (firedKey !== null) {
-    firedKey.classList.toggle('active');
+    firedKey.classList.remove('active');
     firedKey = null;
   }
 };
