@@ -29,7 +29,6 @@ const changeLang = (kbdKeysInst) => {
     kbdKeysInst.forEach((keyGroup) => {
       keyGroup.forEach((key) => {
         const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
-        global.console.log(key[1]);
         const keyRu = key[2];
         keyCurrent.innerText = keyRu;
       });
@@ -41,7 +40,6 @@ const changeLang = (kbdKeysInst) => {
     kbdKeysInst.forEach((keyGroup) => {
       keyGroup.forEach((key) => {
         const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
-        global.console.log(key[1]);
         const keyRu = key[3];
         keyCurrent.innerText = keyRu;
       });
@@ -53,7 +51,6 @@ const changeLang = (kbdKeysInst) => {
     kbdKeysInst.forEach((keyGroup) => {
       keyGroup.forEach((key) => {
         const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
-        global.console.log(key[1]);
         const keyEn = key[4];
         keyCurrent.innerText = keyEn;
       });
@@ -65,7 +62,6 @@ const changeLang = (kbdKeysInst) => {
     kbdKeysInst.forEach((keyGroup) => {
       keyGroup.forEach((key) => {
         const keyCurrent = document.querySelector(`div[data-action=${key[1]}]`);
-        global.console.log(key[1]);
         const keyEn = key[5];
         keyCurrent.innerText = keyEn;
       });
@@ -74,12 +70,30 @@ const changeLang = (kbdKeysInst) => {
   }
 };
 
-// const langSwitcher = () => {
-//   const { lang } = states;
-//   if (lang === 'en') {
+const langSwitcher = () => {
+  const { lang } = states;
+  if (lang === 'en') {
+    kbdkeys.forEach((row) => {
+      row.forEach((item) => {
+        const keyCurrent = document.querySelector(`div[data-action=${item[1]}]`);
+        const keyEn = item[2];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'ru';
+  }
 
-//   }
-// }
+  if (lang === 'ru') {
+    kbdkeys.forEach((row) => {
+      row.forEach((item) => {
+        const keyCurrent = document.querySelector(`div[data-action=${item[1]}]`);
+        const keyEn = item[4];
+        keyCurrent.innerText = keyEn;
+      });
+    });
+    states.lang = 'en';
+  }
+};
 
 const shiftUpper = (kbdKeysInst) => {
   const { lang, ShiftLeft } = states;
@@ -141,6 +155,11 @@ kbdkeys.forEach((row) => {
   });
 });
 
+if (localStorage.getItem('lang')) {
+  states.lang = localStorage.getItem('lang');
+  langSwitcher();
+}
+
 const keyDownListener = (event) => {
   event.preventDefault();
   let someKey;
@@ -151,7 +170,6 @@ const keyDownListener = (event) => {
   }
 
   if (event.target.hasAttribute('data-action')) {
-    global.console.log(event.target);
     someKey = event.target;
     setValue = someKey.innerText;
   }
@@ -213,8 +231,6 @@ const keyDownListener = (event) => {
           }
         }
       }
-
-      global.console.log(states);
     } else if (someKey.getAttribute('data-action') === 'Tab') {
       textArea.value += ' '.repeat(4);
       someKey.classList.toggle('active');
@@ -262,7 +278,18 @@ const keyUpListener = () => {
   }
 };
 
+const reloadListener = () => {
+  if (states.lang === 'ru') {
+    localStorage.setItem('lang', 'en');
+  }
+
+  if (states.lang === 'en') {
+    localStorage.setItem('lang', 'ru');
+  }
+};
+
 window.addEventListener('keydown', keyDownListener);
 window.addEventListener('keyup', keyUpListener);
 kbdContainer.addEventListener('mousedown', keyDownListener);
 kbdContainer.addEventListener('mouseup', keyUpListener);
+window.addEventListener('unload', reloadListener);
